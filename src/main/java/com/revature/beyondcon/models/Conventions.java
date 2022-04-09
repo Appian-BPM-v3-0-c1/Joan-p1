@@ -1,16 +1,16 @@
-package com.revature.convention.models;
+package com.revature.beyondcon.models;
 
-public class Convention {
+public class Conventions {
     private int id;
     private String name;
     private String city;
     private String state;
 
-    public Convention() {
+    public Conventions() {
 
     }
 
-    public Convention(int id, String name, String city, String state) {
+    public Conventions(int id, String name, String city, String state) {
         this.id = id;
         this.name = name;
         this.city = city;

@@ -1,6 +1,5 @@
-package com.revature.convention.ui;
+package com.revature.beyondcon.ui;
 
-import com.revature.convention.models.Convention;
 import java.util.Scanner;
 
 public class MainMenu implements IMenu {
