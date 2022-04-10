@@ -1,18 +1,15 @@
 package com.revature.beyondcon.models;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-public class Cities {
+public class Cons {
     private int id;
     private String city;
     private String state;
     private String date;
 
-    public Cities() {
+    public Cons() {
     }
 
-    public Cities(int id, String city, String state, String date) {
+    public Cons(int id, String city, String state, String date) {
         this.id = id;
         this.city = city;
         this.state = state;
@@ -53,7 +50,7 @@ public class Cities {
 
     @Override
     public String toString() {
-        return "Id: " + id + "\nCity: " + city + "\nState: " + state + "\nDate: " + date;
+        return "ID: " + id + "\nCity: " + city + "\nState: " + state + "\nDate: " + date;
     }
 
 }

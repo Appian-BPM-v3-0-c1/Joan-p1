@@ -1,12 +1,14 @@
 package com.revature.beyondcon.ui;
 
-import com.revature.beyondcon.models.Cities;
+import com.revature.beyondcon.daos.ConsDAO;
+import com.revature.beyondcon.daos.CrudDAO;
+import com.revature.beyondcon.models.Cons;
 
-import java.text.ParseException;
-import java.util.Locale;
 import java.util.Scanner;
 
-public class CitiesMenu implements IMenu {
+public class ConsMenu implements IMenu {
+
+    CrudDAO<Cons> crudDAO = new ConsDAO();
 
     @Override
     public void start() {
@@ -15,10 +17,10 @@ public class CitiesMenu implements IMenu {
         Scanner scan = new Scanner(System.in);
 
         while(!exit) {
-            System.out.println("\nWelcome to the list of all 2022 BeyondCon cities!");
-            System.out.println("\n[1] List all cities");
-            System.out.println("[2] Search all cities");
-            System.out.println("[3] Create new convention");
+            System.out.println("\nWelcome to the list of all BeyondCon 2023 conventions across the United States and Canada.");
+            System.out.println("\n[1] List all active conventions");
+            System.out.println("[2] Search all active conventions");
+            System.out.println("[3] Create new BeyondCon 2023 convention");
             System.out.println("[x] Exit");
 
             System.out.print("\nEnter: ");
@@ -34,7 +36,6 @@ public class CitiesMenu implements IMenu {
                     break;
                 case 'x':
                     exit = true;
-                    System.out.println("\nThank you for using BeyondCon Registration. Have a great day!");
                     break;
                 default:
                     System.out.println("\nInvalid input!");
@@ -46,31 +47,28 @@ public class CitiesMenu implements IMenu {
     private void createCon() {
         char input = ' ';
         boolean exit = false;
-        boolean confirm = false;
         Scanner scan = new Scanner(System.in);
-        Cities city = new Cities();
+        Cons con = new Cons();
 
         while(!exit) {
-            System.out.println("\nCreating new BeyondCon convention in a new city...");
-            System.out.print("\nEnter new convention ID: ");
-            city.setId(scan.nextInt());
+            boolean confirm = false;
             System.out.print("\nEnter new convention city: ");
-            city.setCity(scan.next().toLowerCase());
-            System.out.print("\nEnter new convention state: ");
-            city.setState(scan.next().toLowerCase());
-            System.out.print("\nEnter new convention start date (MM/DD/YY): ");
-            city.setDate(scan.next().toLowerCase());
-            confirm = false;
+            con.setCity(scan.nextLine().toLowerCase());
+            System.out.print("Enter new convention state: ");
+            con.setState(scan.nextLine().toLowerCase());
+            System.out.print("Enter new convention start date (MM/DD): ");
+            con.setDate(scan.nextLine() + "/2023");
 
             while(!confirm) {
                 System.out.println("\nIs the following information correct? (y/n)");
-                System.out.println(city);
+                System.out.println(con);
                 System.out.print("\nEnter: ");
 
-                input = scan.next().charAt(0);
+                input = scan.nextLine().charAt(0);
                 switch (input) {
                     case 'y':
-                        System.out.println("\nBeyondCon convention in " + city.getCity() + " created successfully!");
+                        crudDAO.save(con);
+                        System.out.println("\nA new BeyondCon 2023 convention in " + con.getCity() + " has been created successfully!");
                         exit = true;
                         confirm = true;
                         break;
@@ -84,4 +82,5 @@ public class CitiesMenu implements IMenu {
             }
         }
     }
+
 }
