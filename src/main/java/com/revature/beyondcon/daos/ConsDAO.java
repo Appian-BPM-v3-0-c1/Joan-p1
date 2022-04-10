@@ -5,7 +5,9 @@ import com.revature.beyondcon.models.Cons;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsDAO implements CrudDAO<Cons> {
@@ -32,11 +34,30 @@ public class ConsDAO implements CrudDAO<Cons> {
 
     @Override
     public List<Cons> findAll() {
-        return null;
+        List<Cons> consList = new ArrayList<>();
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM cons");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Cons cons = new Cons();
+
+                cons.setId(rs.getInt("id"));
+                cons.setCity(rs.getString("city"));
+                cons.setState(rs.getString("state"));
+                cons.setDate(rs.getString("start_date"));
+
+                consList.add(cons);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return consList;
     }
 
     @Override
-    public Cons findById(String id) {
+    public Cons findById(int id) {
         return null;
     }
 

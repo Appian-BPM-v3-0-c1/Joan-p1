@@ -60,7 +60,7 @@ public class Events {
 
     @Override
     public String toString() {
-        return "ID: " + id + "\nEvent Title: " + title + "\nDate: " + startDate + "Time: " + startTime + "Convention ID: " + conId;
+        return "ID: " + id + "\nEvent Title: " + title + "\nDate: " + startDate + "\nTime: " + startTime + "\nConvention ID: " + conId;
     }
 
 }

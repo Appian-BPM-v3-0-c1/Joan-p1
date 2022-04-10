@@ -1,10 +1,17 @@
 package com.revature.beyondcon.daos;
 
+import com.revature.beyondcon.connection.DatabaseConnection;
 import com.revature.beyondcon.models.Events;
 
+import javax.xml.transform.Result;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class EventsDAO implements CrudDAO<Events> {
+    Connection con = DatabaseConnection.getCon();
 
     @Override
     public int save(Events obj) {
@@ -17,8 +24,27 @@ public class EventsDAO implements CrudDAO<Events> {
     }
 
     @Override
-    public Events findById(String id) {
-        return null;
+    public Events findById(int id) {
+        Events events = new Events();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM events WHERE con_id = ?");
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                events.setId(rs.getInt("id"));
+                events.setTitle(rs.getString("title"));
+                events.setStartDate(rs.getString("start_date"));
+                events.setStartTime(rs.getString("start_time"));
+                events.setConId(rs.getInt("con_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return events;
     }
 
     @Override
