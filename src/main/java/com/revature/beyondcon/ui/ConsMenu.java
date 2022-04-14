@@ -1,18 +1,22 @@
 package com.revature.beyondcon.ui;
 
-import com.revature.beyondcon.daos.ConsDAO;
-import com.revature.beyondcon.daos.CrudDAO;
-import com.revature.beyondcon.daos.EventsDAO;
+import com.revature.beyondcon.models.Attendee;
 import com.revature.beyondcon.models.Cons;
 import com.revature.beyondcon.models.Events;
+import com.revature.beyondcon.services.ConsService;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ConsMenu implements IMenu {
 
-    CrudDAO<Cons> consDAO = new ConsDAO();
-    CrudDAO<Events> eventsCrudDAO = new EventsDAO();
+    private final ConsService consService;
+    private final Attendee attendee;
+
+    public ConsMenu(ConsService consService, Attendee attendee) {
+        this.consService = consService;
+        this.attendee = attendee;
+    }
 
     @Override
     public void start() {
@@ -72,7 +76,7 @@ public class ConsMenu implements IMenu {
                 input = scan.nextLine().charAt(0);
                 switch (input) {
                     case 'y':
-                        consDAO.save(con);
+                        consService.getConsDAO().save(con);
                         System.out.println("\nA new BeyondCon 2023 convention in " + con.getCity() + " has been created successfully!");
                         exit = true;
                         confirm = true;
@@ -91,8 +95,7 @@ public class ConsMenu implements IMenu {
     private void viewAllCons() {
         int input = 0;
         Scanner scan = new Scanner(System.in);
-        Events events = new Events();
-        List<Cons> consList = consDAO.findAll();
+        List<Cons> consList = consService.getConsDAO().findAll();
 
         System.out.println();
         for (int i = 0; i < consList.size(); i++) {
@@ -102,13 +105,16 @@ public class ConsMenu implements IMenu {
         while (true) {
             System.out.print("\nSelect a city to view all events for that convention: ");
 
-            input = scan.nextInt();
+            input = scan.nextInt() - 1;
+
             if (input > consList.size()) {
                 System.out.println("\nInvalid input!");
             } else {
-                events = eventsCrudDAO.findById(consList.get(input - 1).getId());
-                System.out.println("\n" + consList.get(input - 1));
-                System.out.println(events);
+                List<Events> eventsList = consService.getEventsDAO().findByConId(consList.get(input).getId());
+                System.out.println("\n" + consList.get(input));
+                for (Events event : eventsList) {
+                    System.out.println(event);
+                }
                 break;
             }
         }

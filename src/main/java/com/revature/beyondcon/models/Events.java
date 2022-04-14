@@ -3,6 +3,7 @@ package com.revature.beyondcon.models;
 public class Events {
     private int id;
     private String title;
+    private String eventDesc;
     private String startDate;
     private String startTime;
     private int conId;
@@ -10,9 +11,10 @@ public class Events {
     public Events() {
     }
 
-    public Events(int id, String title, String startDate, String startTime, int conId) {
+    public Events(int id, String title, String eventDesc, String startDate, String startTime, int conId) {
         this.id = id;
         this.title = title;
+        this.eventDesc = eventDesc;
         this.startDate = startDate;
         this.startTime = startTime;
         this.conId = conId;
@@ -32,6 +34,14 @@ public class Events {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getEventDesc() {
+        return eventDesc;
+    }
+
+    public void setEventDesc(String title) {
+        this.eventDesc = eventDesc;
     }
 
     public String getStartDate() {
@@ -60,7 +70,7 @@ public class Events {
 
     @Override
     public String toString() {
-        return "ID: " + id + "\nEvent Title: " + title + "\nDate: " + startDate + "\nTime: " + startTime + "\nConvention ID: " + conId;
+        return "ID: " + id + "\nEvent Title: " + title + "\nDescription: " + eventDesc + "\nDate: " + startDate + "\nTime: " + startTime + "\nConvention ID: " + conId;
     }
 
 }

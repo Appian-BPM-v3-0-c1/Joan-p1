@@ -3,6 +3,7 @@ package com.revature.beyondcon.daos;
 import com.revature.beyondcon.connection.DatabaseConnection;
 import com.revature.beyondcon.models.Attendee;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,9 +20,10 @@ public class AttendeeDAO implements CrudDAO<Attendee> {
         int n = 0;
 
         try {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO attendees (username, password) VALUES (?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO attendees (username, password, u_type) VALUES (?, ?, ?)");
             ps.setString(1, obj.getUsername());
             ps.setString(2, obj.getPassword());
+            ps.setBoolean(3, obj.getUType());
 
             n = ps.executeUpdate();
         } catch (SQLException e) {
@@ -33,7 +35,26 @@ public class AttendeeDAO implements CrudDAO<Attendee> {
 
     @Override
     public List<Attendee> findAll() {
-        return null;
+        List<Attendee> attendeeList = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM attendees");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Attendee attendee = new Attendee();
+
+                attendee.setId(rs.getInt("id"));
+                attendee.setUsername(rs.getString("username"));
+                attendee.setPassword(rs.getString("password"));
+
+                attendeeList.add(attendee);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attendeeList;
     }
 
     @Override
@@ -66,6 +87,20 @@ public class AttendeeDAO implements CrudDAO<Attendee> {
         }
 
         return usernameList;
+    }
+
+    public int getAttendeeId(String username) {
+        int id = 0;
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT (id) FROM attendees where username = ?");
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return id;
     }
 
 }

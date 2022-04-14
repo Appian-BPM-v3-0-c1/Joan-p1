@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventsDAO implements CrudDAO<Events> {
@@ -25,26 +26,7 @@ public class EventsDAO implements CrudDAO<Events> {
 
     @Override
     public Events findById(int id) {
-        Events events = new Events();
-
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM events WHERE con_id = ?");
-            ps.setInt(1, id);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                events.setId(rs.getInt("id"));
-                events.setTitle(rs.getString("title"));
-                events.setStartDate(rs.getString("start_date"));
-                events.setStartTime(rs.getString("start_time"));
-                events.setConId(rs.getInt("con_id"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return events;
+        return null;
     }
 
     @Override
@@ -55,6 +37,34 @@ public class EventsDAO implements CrudDAO<Events> {
     @Override
     public boolean removeById(String id) {
         return false;
+    }
+
+    public List<Events> findByConId(int id) {
+        List<Events> eventList = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM events WHERE con_id = ?");
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Events events = new Events();
+
+                events.setId(rs.getInt("id"));
+                events.setTitle(rs.getString("title"));
+                events.setEventDesc(rs.getString("event_desc"));
+                events.setStartDate(rs.getString("start_date"));
+                events.setStartTime(rs.getString("start_time"));
+                events.setConId(rs.getInt("con_id"));
+
+                eventList.add(events);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return eventList;
     }
 
 }

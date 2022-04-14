@@ -1,10 +1,11 @@
 package com.revature.beyondcon.services;
 import com.revature.beyondcon.daos.AttendeeDAO;
+import com.revature.beyondcon.models.Attendee;
 
 import java.util.List;
 
 public class AttendeeService {
-        private AttendeeDAO attendeeDAO;
+        private final AttendeeDAO attendeeDAO;
 
         public AttendeeService(AttendeeDAO attendeeDAO) {
                 this.attendeeDAO = attendeeDAO;
@@ -32,6 +33,18 @@ public class AttendeeService {
 
         public boolean isValidPassword(String password) {
                 return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
+        }
+
+        public boolean isValidLogin(Attendee attendee) {
+                List<Attendee> attendeeList = attendeeDAO.findAll();
+
+                for (Attendee u : attendeeList) {
+                        if (u.getUsername().equals(attendee.getUsername()) && u.getPassword().equals(attendee.getPassword())) {
+                                return true;
+                        }
+                }
+
+                return false;
         }
 
 }

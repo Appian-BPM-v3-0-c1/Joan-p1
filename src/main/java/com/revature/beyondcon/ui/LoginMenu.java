@@ -1,5 +1,6 @@
 package com.revature.beyondcon.ui;
 
+import com.revature.beyondcon.Main;
 import com.revature.beyondcon.models.Attendee;
 import com.revature.beyondcon.services.AttendeeService;
 
@@ -31,6 +32,7 @@ public class LoginMenu implements IMenu {
 
                 switch (input) {
                     case '1':
+                        login();
                         break;
                     case '2':
                         createAccount();
@@ -50,6 +52,7 @@ public class LoginMenu implements IMenu {
         String username = "";
         String password1 = "";
         String password2 = "";
+        boolean uType = true;
 
         System.out.println("\nCreating your new account...");
 
@@ -90,6 +93,8 @@ public class LoginMenu implements IMenu {
                 }
             }
 
+            attendee.setUType(uType);
+
             System.out.println("\nPlease confirm your new account credentials (y/n).");
             System.out.println("\nUsername: " + username);
             System.out.println("Password: " + password1);
@@ -102,6 +107,24 @@ public class LoginMenu implements IMenu {
                 break;
             }
 
+        }
+    }
+
+    private void login() {
+        while (true) {
+            System.out.print("\nUsername: ");
+            attendee.setUsername(scan.next());
+
+            System.out.print("\nPassword: ");
+            attendee.setPassword(scan.next());
+
+            if (attendeeService.isValidLogin(attendee)) {
+                attendee.setId(attendeeService.getAttendeeDAO().getAttendeeId(attendee.getUsername()));
+                new MainMenu(attendee).start();
+                break;
+            } else {
+                System.out.println("\nInvalid login information!");
+            }
         }
     }
 
