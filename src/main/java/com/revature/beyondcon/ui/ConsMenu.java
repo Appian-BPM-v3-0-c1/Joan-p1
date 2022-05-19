@@ -39,6 +39,7 @@ public class ConsMenu implements IMenu {
                     viewAllCons();
                     break;
                 case '2':
+                    searchCons();
                     break;
                 case '3':
                     createCon();
@@ -92,6 +93,29 @@ public class ConsMenu implements IMenu {
         }
     }
 
+    private void searchCons() {
+        String city = "";
+        Scanner scan = new Scanner(System.in);
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.print("\nSearch all cities for a convention near you: ");
+            city = scan.nextLine().toLowerCase();
+
+            List<Cons> cons = consService.getConsDAO().findByCity(city);
+
+            if (cons.isEmpty()) {
+                System.out.println("\nNo BeyondCon 2023 cities meet your search parameters.");
+            } else {
+                for (Cons con : cons) {
+                    System.out.println("\n" + con);
+                }
+            }
+
+            exit = true;
+        }
+    }
+
     private void viewAllCons() {
         int input = 0;
         Scanner scan = new Scanner(System.in);
@@ -99,7 +123,19 @@ public class ConsMenu implements IMenu {
 
         System.out.println();
         for (int i = 0; i < consList.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + consList.get(i).getCity() + ", " + consList.get(i).getState());
+            String[] ncity = consList.get(i).getCity().split(" ");
+            for (int j = 0; j < ncity.length; j++) {
+                ncity[j] = ncity[j].substring(0, 1).toUpperCase() + ncity[j].substring(1);
+            }
+            String jcity = String.join(" ", ncity);
+
+            String[] nstate = consList.get(i).getState().split(" ");
+            for (int j = 0; j < nstate.length; j++) {
+                nstate[j] = nstate[j].substring(0, 1).toUpperCase() + nstate[j].substring(1);
+            }
+            String jstate = String.join(" ", nstate);
+
+            System.out.println("[" + (i + 1) + "] " + jcity + ", " + jstate);
         }
 
         while (true) {

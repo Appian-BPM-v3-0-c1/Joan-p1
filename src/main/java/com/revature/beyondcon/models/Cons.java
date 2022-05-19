@@ -1,5 +1,9 @@
 package com.revature.beyondcon.models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class Cons {
     private int id;
     private String city;
@@ -50,7 +54,38 @@ public class Cons {
 
     @Override
     public String toString() {
-        return "ID: " + id + "\nCity: " + city + "\nState: " + state + "\nDate: " + date;
+        String date2 = date;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat nsdf = new SimpleDateFormat("MMM d, YYYY");
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        try {
+            c1.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            c2.setTime(sdf.parse(date2));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c2.add(Calendar.DATE, 2);
+        String ndate = nsdf.format(c1.getTime());
+        String ndate2 = nsdf.format(c2.getTime());
+
+        String[] ncity = city.split(" ");
+        for (int i = 0; i < ncity.length; i++) {
+            ncity[i] = ncity[i].substring(0, 1).toUpperCase() + ncity[i].substring(1);
+        }
+        String jcity = String.join(" ", ncity);
+
+        String[] nstate = state.split(" ");
+        for (int i = 0; i < nstate.length; i++) {
+            nstate[i] = nstate[i].substring(0, 1).toUpperCase() + nstate[i].substring(1);
+        }
+        String jstate = String.join(" ", nstate);
+
+        return "BeyondCon 2023\n" + jcity + ", " + jstate + "\nFrom " + ndate + " to " + ndate2;
     }
 
 }

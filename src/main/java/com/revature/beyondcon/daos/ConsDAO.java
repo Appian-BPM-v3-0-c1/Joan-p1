@@ -57,8 +57,33 @@ public class ConsDAO implements CrudDAO<Cons> {
     }
 
     @Override
-    public Cons findById(int id) {
+    public Cons findById (int id) {
         return null;
+    }
+
+    public List<Cons> findByCity(String city) {
+        List<Cons> cons = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM cons WHERE city LIKE ?");
+            ps.setString(1, "%" + city + "%");
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Cons con = new Cons();
+
+                con.setId(rs.getInt("id"));
+                con.setCity(rs.getString("city"));
+                con.setState(rs.getString("state"));
+                con.setDate(rs.getString("start_date"));
+
+                cons.add(con);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cons;
     }
 
     @Override

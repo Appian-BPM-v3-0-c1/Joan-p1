@@ -1,5 +1,9 @@
 package com.revature.beyondcon.models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class Events {
     private int id;
     private String title;
@@ -40,7 +44,7 @@ public class Events {
         return eventDesc;
     }
 
-    public void setEventDesc(String title) {
+    public void setEventDesc(String eventDesc) {
         this.eventDesc = eventDesc;
     }
 
@@ -70,7 +74,32 @@ public class Events {
 
     @Override
     public String toString() {
-        return "ID: " + id + "\nEvent Title: " + title + "\nDescription: " + eventDesc + "\nDate: " + startDate + "\nTime: " + startTime + "\nConvention ID: " + conId;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat nsdf = new SimpleDateFormat("MMM d, YYYY");
+        SimpleDateFormat tsdf = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat ntsdf = new SimpleDateFormat("h:mm a");
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        try {
+            c1.setTime(sdf.parse(startDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            c2.setTime(tsdf.parse(startTime));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String nStartDate = nsdf.format(c1.getTime());
+        String nStartTime = ntsdf.format(c2.getTime());
+
+        String[] ntitle = title.split(" ");
+        for (int i = 0; i < ntitle.length; i++) {
+            ntitle[i] = ntitle[i].substring(0, 1).toUpperCase() + ntitle[i].substring(1);
+        }
+        String jtitle = String.join(" ", ntitle);
+
+        return "\nEvent: " + jtitle + "\nDescription: " + eventDesc + "\nDate: " + nStartDate + "\nTime: " + nStartTime;
     }
 
 }

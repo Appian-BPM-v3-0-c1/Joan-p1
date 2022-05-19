@@ -41,17 +41,21 @@ public class Attendee {
         this.password = password;
     }
 
-    public boolean getUType() {
+    public boolean isuType() {
         return uType;
     }
 
-    public void setUType(boolean uType) {
+    public void setuType(boolean uType) {
         this.uType = uType;
     }
 
     @Override
     public String toString() {
-        return "Username: " + username;
+        return "Attendee{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", uType=" + uType +
+                '}';
     }
-
 }

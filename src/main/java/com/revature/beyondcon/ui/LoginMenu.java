@@ -1,8 +1,10 @@
 package com.revature.beyondcon.ui;
 
-import com.revature.beyondcon.Main;
+import com.revature.beyondcon.daos.AttendeeDAO;
+import com.revature.beyondcon.daos.ContactInfoDAO;
 import com.revature.beyondcon.models.Attendee;
 import com.revature.beyondcon.services.AttendeeService;
+import com.revature.beyondcon.services.ContactInfoService;
 
 import java.util.Scanner;
 
@@ -22,8 +24,8 @@ public class LoginMenu implements IMenu {
 
         exit: {
             while (true) {
-                System.out.println("\nWelcome to the BeyondCon 2023 Login Menu");
-                System.out.println("\n[1] Log in with your username");
+                System.out.println("\nWelcome to the BeyondCon 2023 Login and Registration");
+                System.out.println("\n[1] Log in");
                 System.out.println("[2] Create new account");
                 System.out.println("[x] Exit");
 
@@ -52,7 +54,7 @@ public class LoginMenu implements IMenu {
         String username = "";
         String password1 = "";
         String password2 = "";
-        boolean uType = true;
+        boolean uType = false;
 
         System.out.println("\nCreating your new account...");
 
@@ -60,7 +62,7 @@ public class LoginMenu implements IMenu {
 
             while (true) {
                 System.out.print("\nEnter your new username: ");
-                username = scan.next();
+                username = scan.next().toLowerCase();
 
                 if (!attendeeService.isDupUsername(username)) {
                     if (attendeeService.isValidUsername(username)) {
@@ -93,19 +95,31 @@ public class LoginMenu implements IMenu {
                 }
             }
 
-            attendee.setUType(uType);
+            attendee.setuType(uType);
 
-            System.out.println("\nPlease confirm your new account credentials (y/n).");
-            System.out.println("\nUsername: " + username);
-            System.out.println("Password: " + password1);
-            System.out.print("\nEnter: ");
+            boolean confirm = false;
+            while(!confirm) {
+                System.out.println("\nPlease confirm your new account credentials (y/n).");
+                System.out.println("\nUsername: " + username);
+                System.out.println("Password: " + password1);
+                System.out.print("\nEnter: ");
+                char input = scan.next().charAt(0);
 
-            if (scan.next().charAt(0) == 'y') {
-                attendeeService.getAttendeeDAO().save(attendee);
-
-                System.out.println("\nYour new account was created successfully!");
-                break;
+                switch (input) {
+                    case 'y':
+                        attendeeService.getAttendeeDAO().save(attendee);
+                        System.out.println("\nYour new account was created successfully!");
+                        confirm = true;
+                        break;
+                    case 'n':
+                        confirm = true;
+                        break;
+                    default:
+                        System.out.println("Invalid input!");
+                        break;
+                }
             }
+            break;
 
         }
     }
@@ -113,17 +127,18 @@ public class LoginMenu implements IMenu {
     private void login() {
         while (true) {
             System.out.print("\nUsername: ");
-            attendee.setUsername(scan.next());
+            attendee.setUsername(scan.next().toLowerCase());
 
             System.out.print("\nPassword: ");
             attendee.setPassword(scan.next());
 
             if (attendeeService.isValidLogin(attendee)) {
-                attendee.setId(attendeeService.getAttendeeDAO().getAttendeeId(attendee.getUsername()));
-                new MainMenu(attendee).start();
+                attendee = attendeeService.getAttendeeDAO().getByUserName(attendee.getUsername());
+                new MainMenu(attendee, new ContactInfoService(new ContactInfoDAO(), new AttendeeDAO())).start();
                 break;
             } else {
                 System.out.println("\nInvalid login information!");
+                break;
             }
         }
     }

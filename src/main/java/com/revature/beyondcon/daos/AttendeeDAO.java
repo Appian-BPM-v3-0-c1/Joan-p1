@@ -2,8 +2,8 @@ package com.revature.beyondcon.daos;
 
 import com.revature.beyondcon.connection.DatabaseConnection;
 import com.revature.beyondcon.models.Attendee;
+import com.revature.beyondcon.models.ContactInfo;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +23,7 @@ public class AttendeeDAO implements CrudDAO<Attendee> {
             PreparedStatement ps = con.prepareStatement("INSERT INTO attendees (username, password, u_type) VALUES (?, ?, ?)");
             ps.setString(1, obj.getUsername());
             ps.setString(2, obj.getPassword());
-            ps.setBoolean(3, obj.getUType());
+            ps.setBoolean(3, obj.isuType());
 
             n = ps.executeUpdate();
         } catch (SQLException e) {
@@ -89,18 +89,24 @@ public class AttendeeDAO implements CrudDAO<Attendee> {
         return usernameList;
     }
 
-    public int getAttendeeId(String username) {
-        int id = 0;
+    public Attendee getByUserName (String username) {
+        Attendee attendee = new Attendee();
 
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT (id) FROM attendees where username = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM attendees WHERE username = ?");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                attendee.setId(rs.getInt("id"));
+                attendee.setUsername(rs.getString("username"));
+                attendee.setPassword(rs.getString("password"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return id;
+        return attendee;
     }
 
 }
